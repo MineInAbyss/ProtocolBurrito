@@ -1,0 +1,43 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.20'
+    id "com.github.ben-manes.versions" version "0.36.0"
+    id 'org.jetbrains.kotlin.kapt' version '1.4.20'
+    id 'idea'
+    id 'java'
+}
+
+group = 'me.offz'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots" }
+    maven { url "https://repo.dmulloy2.net/nexus/repository/public/" } //ProtocolLib
+}
+
+dependencies {
+    implementation "org.spigotmc:spigot-api:$server_version" //Spigot
+    implementation 'com.nfeld.jsonpathkt:jsonpathkt:2.0.0'
+    implementation "com.squareup:kotlinpoet:1.7.2"
+
+    compileOnly "com.google.auto.service:auto-service:1.0-rc7"
+    kapt "com.google.auto.service:auto-service:1.0-rc7"
+    implementation "com.comphenix.protocol:ProtocolLib:4.5.0"
+//    kapt project(":processor")
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+}
+
+sourceSets.main.kotlin.srcDirs += 'src/main/generated'
+
+idea {
+    module {
+        generatedSourceDirs += file('src/main/generated')
+    }
+}
