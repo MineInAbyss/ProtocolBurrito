@@ -1,6 +1,6 @@
 import com.comphenix.protocol.events.PacketContainer
-import com.comphenix.protocol.wrappers.nbt.NbtBase
 import com.mineinabyss.protocolwrapper.dsl.WrappedPacket
+import com.mineinabyss.protocolwrapper.dsl.generateEntityIdMapper
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
 import com.squareup.kotlinpoet.*
@@ -14,10 +14,15 @@ import kotlin.reflect.KClass
 
 val generated = File(System.getProperty("user.dir") + "/src/main/generated")
 
+const val SERVER_VERSION = "1.16.2"
+const val SERVER_PATH = "minecraft-data/data/pc/$SERVER_VERSION/"
 fun main() {
-    val json = File("protocol.json").readText()
+
+    generateEntityIdMapper()
+
+    val protocolFile = File("$SERVER_PATH/protocol.json").readText()
     val parsed: Map<String, List<Any?>> =
-        JsonPath.parse(json)?.read("$.play.toClient.types")!! // returns mapOf("inner" to 1)
+        JsonPath.parse(protocolFile)?.read("$.play.toClient.types")!!
 
     parsed.filter { it.key != "packet" }
 //        .filter { it.key == "packet_entity_move_look" }
@@ -59,7 +64,7 @@ val types = mapOf(
 //    "void" to ::class,
 //    "array" to ::class, //TODO yeah this one'll be fun
 //    "restBuffer" to ::class, //some nbt data for block lighting
-    "nbt" to NbtBase::class, //no idea how to read this properly
+//    "nbt" to NbtBase::class, //no idea how to read this properly
 //    "optionalNbt" to ::class,
     "string" to String::class,
     "slot" to ItemStack::class, //looks like ItemStack https://wiki.vg/Slot_Data
