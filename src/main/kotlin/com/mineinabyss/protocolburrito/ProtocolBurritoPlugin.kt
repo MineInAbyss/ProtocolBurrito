@@ -5,6 +5,6 @@ import org.bukkit.plugin.java.JavaPlugin
 @RunGenerator
 class ProtocolBurritoPlugin : JavaPlugin() {
     override fun onEnable() {
-        super.onEnable()
+        logger.info("ProtocolBurrito is ready to start wrapping packets!")
     }
 }
