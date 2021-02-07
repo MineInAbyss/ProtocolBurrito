@@ -1,0 +1,9 @@
+name: ProtocolBurrito
+version: @plugin_version@
+author: Offz
+main: com.mineinabyss.protocolburrito.ProtocolBurritoPlugin
+api-version: 1.16
+depend: [ProtocolLib]
+
+prefix: ProtocolBurrito
+description: A packet wrapper for ProtocolLib

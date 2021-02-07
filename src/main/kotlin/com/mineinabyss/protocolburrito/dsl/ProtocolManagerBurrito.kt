@@ -10,11 +10,11 @@ import com.comphenix.protocol.events.PacketEvent
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class BurritoProtocolManager(protocolManager: ProtocolManager, val plugin: Plugin) : ProtocolManager by protocolManager {
-    fun ProtocolManager.onSend(
+class ProtocolManagerBurrito(protocolManager: ProtocolManager, val plugin: Plugin) : ProtocolManager by protocolManager {
+    inline fun ProtocolManager.onSend(
         vararg packets: PacketType,
         priority: ListenerPriority = ListenerPriority.NORMAL,
-        onSend: PacketEvent.() -> Unit
+        crossinline onSend: PacketEvent.() -> Unit
     ) {
         addPacketListener(object : PacketAdapter(plugin, priority, *packets) {
             override fun onPacketSending(event: PacketEvent) {
@@ -23,10 +23,10 @@ class BurritoProtocolManager(protocolManager: ProtocolManager, val plugin: Plugi
         })
     }
 
-    fun ProtocolManager.onReceive(
-            vararg packets: PacketType,
-            priority: ListenerPriority = ListenerPriority.NORMAL,
-            onSend: PacketEvent.() -> Unit
+    inline fun ProtocolManager.onReceive(
+        vararg packets: PacketType,
+        priority: ListenerPriority = ListenerPriority.NORMAL,
+        crossinline onSend: PacketEvent.() -> Unit
     ) {
         addPacketListener(object : PacketAdapter(plugin, priority, *packets) {
             override fun onPacketReceiving(event: PacketEvent) {
@@ -36,8 +36,8 @@ class BurritoProtocolManager(protocolManager: ProtocolManager, val plugin: Plugi
     }
 }
 
-fun protocolManager(plugin: Plugin, run: BurritoProtocolManager.() -> Unit) {
-    BurritoProtocolManager(ProtocolLibrary.getProtocolManager()!!, plugin).apply(run)
+inline fun protocolManager(plugin: Plugin, run: ProtocolManagerBurrito.() -> Unit) {
+    ProtocolManagerBurrito(ProtocolLibrary.getProtocolManager()!!, plugin).apply(run)
 }
 
 fun PacketContainer.sendTo(player: Player) {

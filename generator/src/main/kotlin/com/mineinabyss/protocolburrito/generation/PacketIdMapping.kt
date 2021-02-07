@@ -18,7 +18,7 @@ fun generateEntityIdMapper() {
 fun generateNameToIDWrapper(
     className: String,
     fileName: String,
-    packageName: String = "com.mineinabyss.packetwrap.enums",
+    packageName: String = "com.mineinabyss.protocolburrito.enums",
 ) {
     println("Generating enum for $fileName")
     val entitiesFile = File("$SERVER_PATH/$fileName").readText()
