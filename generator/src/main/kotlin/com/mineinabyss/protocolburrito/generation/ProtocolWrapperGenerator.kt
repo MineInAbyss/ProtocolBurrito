@@ -71,7 +71,7 @@ fun generateWrapper(packetName: String, params: List<HashMap<String, *>>) {
             }
     }
 
-    val file = FileSpec.builder("com.mineinabyss.protocolburrito", className)
+    val file = FileSpec.builder("com.mineinabyss.protocolburrito.packets", className)
         .addType(
             TypeSpec
                 .classBuilder(className)
