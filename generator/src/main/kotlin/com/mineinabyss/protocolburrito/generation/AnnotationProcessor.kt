@@ -1,4 +1,4 @@
-package com.mineinabyss.protocolburrito
+package com.mineinabyss.protocolburrito.generation
 
 import com.google.auto.service.AutoService
 import javax.annotation.processing.*
@@ -21,8 +21,7 @@ annotation class RunGenerator
 @AutoService(Processor::class)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @SupportedOptions(AnnotationProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME)
-class AnnotationProcessor: AbstractProcessor()
-{
+class AnnotationProcessor : AbstractProcessor() {
     companion object {
         const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
         lateinit var generatedDir: String

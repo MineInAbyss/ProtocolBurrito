@@ -1,4 +1,4 @@
-package com.mineinabyss.protocolburrito
+package com.mineinabyss.protocolburrito.generation
 
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read

@@ -1,4 +1,4 @@
-package com.mineinabyss.protocolburrito
+package com.mineinabyss.protocolburrito.generation
 
 fun main() {
     generateEntityIdMapper()

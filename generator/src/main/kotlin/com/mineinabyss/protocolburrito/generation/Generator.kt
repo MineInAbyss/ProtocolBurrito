@@ -1,7 +1,7 @@
-package com.mineinabyss.protocolburrito
+package com.mineinabyss.protocolburrito.generation
 
 import com.comphenix.protocol.events.PacketContainer
-import com.mineinabyss.protocolburrito.generation.TypeMap
+import com.mineinabyss.protocolburrito.WrappedPacket
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
 import com.squareup.kotlinpoet.*
@@ -31,7 +31,6 @@ fun generateProtocolWrappers() {
             }.onFailure { println("Skipping ${entry.key} due to error") }
         }
 }
-
 
 
 fun getType(type: String): KClass<*>? {
