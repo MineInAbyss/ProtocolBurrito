@@ -4,6 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.kapt' version '1.4.20'
     id 'idea'
     id 'java'
+    id 'application'
 }
 
 group = 'me.offz'
@@ -11,19 +12,26 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
-    maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots" }
-    maven { url "https://repo.dmulloy2.net/nexus/repository/public/" } //ProtocolLib
+}
+
+allprojects {
+    apply plugin: 'java'
+
+    repositories {
+        maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots" }
+        maven { url "https://repo.dmulloy2.net/nexus/repository/public/" } //ProtocolLib
+    }
+
+    dependencies {
+        compileOnly "org.spigotmc:spigot-api:$server_version" //Spigot
+        compileOnly "com.comphenix.protocol:ProtocolLib:4.5.0"
+    }
+
 }
 
 dependencies {
-    implementation "org.spigotmc:spigot-api:$server_version" //Spigot
-    implementation 'com.nfeld.jsonpathkt:jsonpathkt:2.0.0'
-    implementation "com.squareup:kotlinpoet:1.7.2"
-
-    compileOnly "com.google.auto.service:auto-service:1.0-rc7"
-    kapt "com.google.auto.service:auto-service:1.0-rc7"
-    implementation "com.comphenix.protocol:ProtocolLib:4.5.0"
-//    kapt project(":processor")
+    compileOnly project(":generator")
+    kapt project(":generator")
 }
 
 compileKotlin {
@@ -32,12 +40,4 @@ compileKotlin {
 
 compileTestKotlin {
     kotlinOptions.jvmTarget = '1.8'
-}
-
-sourceSets.main.kotlin.srcDirs += 'src/main/generated'
-
-idea {
-    module {
-        generatedSourceDirs += file('src/main/generated')
-    }
 }

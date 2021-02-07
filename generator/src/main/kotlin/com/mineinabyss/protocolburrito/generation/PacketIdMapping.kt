@@ -1,19 +1,12 @@
-package com.mineinabyss.protocolwrapper.dsl
+package com.mineinabyss.protocolburrito
 
-import SERVER_PATH
-import com.mineinabyss.packetwrap.PacketEntityType
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import generated
 import java.io.File
-
-fun main() {
-    generateEntityIdMapper()
-}
 
 fun generateEntityIdMapper() {
     generateNameToIDWrapper("PacketEntityType", "entities.json")
@@ -25,7 +18,7 @@ fun generateEntityIdMapper() {
 fun generateNameToIDWrapper(
     className: String,
     fileName: String,
-    packageName: String = "com.mineinabyss.packetwrap",
+    packageName: String = "com.mineinabyss.packetwrap.enums",
 ) {
     println("Generating enum for $fileName")
     val entitiesFile = File("$SERVER_PATH/$fileName").readText()
@@ -62,5 +55,5 @@ fun generateNameToIDWrapper(
         )
         .build()
 
-    file.writeTo(generated)
+    file.writeTo(File(AnnotationProcessor.generatedDir))
 }

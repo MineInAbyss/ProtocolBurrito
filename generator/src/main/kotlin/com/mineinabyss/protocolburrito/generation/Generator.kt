@@ -1,25 +1,19 @@
+package com.mineinabyss.protocolburrito
+
 import com.comphenix.protocol.events.PacketContainer
-import com.mineinabyss.protocolwrapper.dsl.WrappedPacket
-import com.mineinabyss.protocolwrapper.dsl.generateEntityIdMapper
+import com.mineinabyss.protocolburrito.generation.TypeMap
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
 import com.squareup.kotlinpoet.*
-import org.bukkit.Location
-import org.bukkit.Particle
-import org.bukkit.inventory.ItemStack
 import java.io.File
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.reflect.KClass
 
-val generated = File(System.getProperty("user.dir") + "/src/main/generated")
-
 const val SERVER_VERSION = "1.16.2"
 const val SERVER_PATH = "minecraft-data/data/pc/$SERVER_VERSION/"
-fun main() {
 
-    generateEntityIdMapper()
-
+fun generateProtocolWrappers() {
     val protocolFile = File("$SERVER_PATH/protocol.json").readText()
     val parsed: Map<String, List<Any?>> =
         JsonPath.parse(protocolFile)?.read("$.play.toClient.types")!!
@@ -34,55 +28,18 @@ fun main() {
                         .filterIsInstance<List<HashMap<String, *>>>()
                         .first()
                 )
-            }.onFailure { println("Skipping $entry due to error") }
+            }.onFailure { println("Skipping ${entry.key} due to error") }
         }
-
-
 }
 
-val types = mapOf(
-    "varint" to Int::class,
-//    "optvarint" to ::class,
-//    "pstring" to ::class,
-//    "u16" to Double::class,
-    "u8" to Byte::class,
-    "i64" to Long::class,
-    "buffer" to ByteArray::class,
-    "i32" to Int::class,
-    "i8" to Byte::class,
-    "bool" to Boolean::class,
-    "i16" to Short::class,
-    "f32" to Float::class,
-    "f64" to Double::class,
-    "UUID" to UUID::class,
-//    "option" to ::class,
-//    "entityMetadataLoop" to ::class,
-//    "topBitSetTerminatedArray" to ::class, //used by packet_entity_equipment
-//    "bitfield" to ::class, //used by packet_multi_block_change as chunk selection position
-//    "container" to ::class, //used by packet_close_window as window id
-//    "switch" to ::class,
-//    "void" to ::class,
-//    "array" to ::class, //TODO yeah this one'll be fun
-//    "restBuffer" to ::class, //some nbt data for block lighting
-//    "nbt" to NbtBase::class, //no idea how to read this properly
-//    "optionalNbt" to ::class,
-    "string" to String::class,
-    "slot" to ItemStack::class, //looks like ItemStack https://wiki.vg/Slot_Data
-    "particle" to Particle::class, //TODO no idea if it's right
-//    "particleData", //TODO no idea
-//    "ingredient",
-    "position" to Location::class,
-//    "entityMetadataItem",
-//    "entityMetadata" //https://wiki.vg/Entity_metadata#Entity_Metadata_Format
-)
 
 
-fun getType(type: String): KClass<*> {
-    return types[type] ?: Int::class
+fun getType(type: String): KClass<*>? {
+    return TypeMap.types[type]
 }
 
 fun generateWrapper(packetName: String, params: List<HashMap<String, *>>) {
-    val className = packetName.capitalize().replace("_", "")
+    val className = packetName.split("_").joinToString("") { it.capitalize() }
 //    println("${this["name"]} ${this["type"]}")
 
 //    val typeClasses: List<KClass<*>> = params.toSet().mapNotNull {
@@ -90,13 +47,14 @@ fun generateWrapper(packetName: String, params: List<HashMap<String, *>>) {
 //    }
 
     val indices = mutableMapOf<String, AtomicInteger>()
-    val props = params.map {
+    val props: List<PropertySpec> = params.mapNotNull {
         val type = it["type"] as String
         val name = it["name"] as String
 
         val index = indices.getOrPut(type) { AtomicInteger(0) }
 
-        val typeClass = getType(type)
+        val typeClass = getType(type) ?: return@mapNotNull null
+
         PropertySpec.builder(name, typeClass)
 
             .getter(
@@ -114,7 +72,7 @@ fun generateWrapper(packetName: String, params: List<HashMap<String, *>>) {
             }
     }
 
-    val file = FileSpec.builder("", className)
+    val file = FileSpec.builder("com.mineinabyss.packetwrap", className)
         .addType(
             TypeSpec
                 .classBuilder(className)
@@ -130,5 +88,5 @@ fun generateWrapper(packetName: String, params: List<HashMap<String, *>>) {
                 .build()
         ).build()
 
-    file.writeTo(generated)
+    file.writeTo(File(AnnotationProcessor.generatedDir))
 }

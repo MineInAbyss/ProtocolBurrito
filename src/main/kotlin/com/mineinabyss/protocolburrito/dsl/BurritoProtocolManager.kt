@@ -1,4 +1,4 @@
-package com.mineinabyss.protocolwrapper.dsl
+package com.mineinabyss.protocolburrito.dsl
 
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolLibrary
@@ -10,8 +10,7 @@ import com.comphenix.protocol.events.PacketEvent
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class ProtoKolManager(protocolManager: ProtocolManager, val plugin: Plugin) : ProtocolManager by protocolManager {
-
+class BurritoProtocolManager(protocolManager: ProtocolManager, val plugin: Plugin) : ProtocolManager by protocolManager {
     fun ProtocolManager.onSend(
         vararg packets: PacketType,
         priority: ListenerPriority = ListenerPriority.NORMAL,
@@ -37,8 +36,8 @@ class ProtoKolManager(protocolManager: ProtocolManager, val plugin: Plugin) : Pr
     }
 }
 
-fun protocolManager(plugin: Plugin, run: ProtoKolManager.() -> Unit) {
-    ProtoKolManager(ProtocolLibrary.getProtocolManager()!!, plugin).apply(run)
+fun protocolManager(plugin: Plugin, run: BurritoProtocolManager.() -> Unit) {
+    BurritoProtocolManager(ProtocolLibrary.getProtocolManager()!!, plugin).apply(run)
 }
 
 fun PacketContainer.sendTo(player: Player) {
