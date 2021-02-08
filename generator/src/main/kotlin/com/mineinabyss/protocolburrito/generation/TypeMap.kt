@@ -1,26 +1,35 @@
 package com.mineinabyss.protocolburrito.generation
 
-import org.bukkit.Location
-import org.bukkit.Particle
-import org.bukkit.inventory.ItemStack
-import java.util.*
+import com.comphenix.protocol.events.PacketContainer
+import com.comphenix.protocol.reflect.StructureModifier
+import kotlin.reflect.KClass
+import kotlin.reflect.KFunction1
 
 object TypeMap {
-    val types = mapOf(
-        "varint" to Int::class,
+    class TypeInfo<T : Any>(
+        val kClass: KClass<T>,
+        val structureModified: KFunction1<PacketContainer, StructureModifier<T>>
+    )
+
+    inline fun <reified T : Any> get(function: KFunction1<PacketContainer, StructureModifier<T>>): TypeInfo<T> {
+        return TypeInfo(T::class, function)
+    }
+
+    val types = mapOf<String, TypeInfo<*>>(
+        "varint" to get(PacketContainer::getIntegers),
 //    "optvarint" to ::class,
 //    "pstring" to ::class,
 //    "u16" to Double::class,
-        "u8" to Byte::class,
-        "i64" to Long::class,
-        "buffer" to ByteArray::class,
-        "i32" to Int::class,
-        "i8" to Byte::class,
-        "bool" to Boolean::class,
-        "i16" to Short::class,
-        "f32" to Float::class,
-        "f64" to Double::class,
-        "UUID" to UUID::class,
+        "u8" to get(PacketContainer::getBytes),
+        "i64" to get(PacketContainer::getLongs),
+        "buffer" to get(PacketContainer::getByteArrays),
+        "i32" to get(PacketContainer::getIntegers),
+        "i8" to get(PacketContainer::getBytes),
+        "bool" to get(PacketContainer::getBooleans),
+        "i16" to get(PacketContainer::getShorts),
+        "f32" to get(PacketContainer::getFloat),
+        "f64" to get(PacketContainer::getDoubles),
+        "UUID" to get(PacketContainer::getUUIDs),
 //    "option" to ::class,
 //    "entityMetadataLoop" to ::class,
 //    "topBitSetTerminatedArray" to ::class, //used by packet_entity_equipment
@@ -32,12 +41,12 @@ object TypeMap {
 //    "restBuffer" to ::class, //some nbt data for block lighting
 //    "nbt" to NbtBase::class, //no idea how to read this properly
 //    "optionalNbt" to ::class,
-        "string" to String::class,
-        "slot" to ItemStack::class, //looks like ItemStack https://wiki.vg/Slot_Data
-        "particle" to Particle::class, //TODO no idea if it's right
+        "string" to get(PacketContainer::getStrings),
+        "slot" to get(PacketContainer::getItemModifier), //looks like ItemStack https://wiki.vg/Slot_Data
+        "particle" to get(PacketContainer::getParticles), //TODO no idea if it's right
 //    "particleData", //TODO no idea
 //    "ingredient",
-        "position" to Location::class,
+        "position" to get(PacketContainer::getBlockPositionModifier),
 //    "entityMetadataItem",
 //    "entityMetadata" //https://wiki.vg/Entity_metadata#Entity_Metadata_Format
     )

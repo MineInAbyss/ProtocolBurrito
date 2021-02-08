@@ -8,7 +8,6 @@ import com.squareup.kotlinpoet.*
 import java.io.File
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.reflect.KClass
 
 const val SERVER_VERSION = "1.16.2"
 const val SERVER_PATH = "minecraft-data/data/pc/$SERVER_VERSION/"
@@ -32,11 +31,6 @@ fun generateProtocolWrappers() {
         }
 }
 
-
-fun getType(type: String): KClass<*>? {
-    return TypeMap.types[type]
-}
-
 fun generateWrapper(packetName: String, params: List<HashMap<String, *>>) {
     val className = packetName.split("_").joinToString("") { it.capitalize() }
 //    println("${this["name"]} ${this["type"]}")
@@ -52,18 +46,16 @@ fun generateWrapper(packetName: String, params: List<HashMap<String, *>>) {
 
         val index = indices.getOrPut(type) { AtomicInteger(0) }
 
-        val typeClass = getType(type) ?: return@mapNotNull null
-
-        PropertySpec.builder(name, typeClass)
-
+        val typeInfo = TypeMap.types[type] ?: return@mapNotNull null
+        PropertySpec.builder(name, typeInfo.kClass)
             .getter(
                 FunSpec.getterBuilder()
-                    .addStatement("return read(${index.toInt()})").build()
+                    .addStatement("return handle.${typeInfo.structureModified.name}().read(${index.toInt()})").build()
             )
             .setter(
                 FunSpec.setterBuilder()
-                    .addParameter(ParameterSpec.builder("value", typeClass).build())
-                    .addCode("write(${index.toInt()}, value)").build()
+                    .addParameter(ParameterSpec.builder("value", typeInfo.kClass).build())
+                    .addCode("handle.${typeInfo.structureModified.name}().write(${index.toInt()}, value)").build()
             )
             .mutable(true)
             .build().also {

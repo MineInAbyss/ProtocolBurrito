@@ -29,4 +29,4 @@ This project can be shaded into your plugin, however it's designed to be used as
 ### Limitations
 
 - We currently require you to provide Kotlin yourself, either via shading or a separate dependency plugin. We are going to look into setting this up automatically with https://github.com/knightzmc/pdm/.
-- Many data types outside primitives aren't supported. We'll be fixing this for ItemStacks soon but more complex NBT structure support will be harder to implement.
+- Many data types (including arrays) aren't currently supported. These values are simply skipped, and a wrapper won't be generated for them.
