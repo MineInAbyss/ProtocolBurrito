@@ -57,7 +57,7 @@ protocolManager.addPacketListener(object : PacketAdapter(
 
 ```kotlin
 protocolManager(pluginRef) {
-    onSend(Server.SPAWN_ENTITY_LIVING) {
+    onSend(PacketType.Play.Server.SPAWN_ENTITY_LIVING) {
         PacketSpawnEntityLiving(packet).apply {
             if (entity(entityUUID)?.isCustomEntity == true)
                 type = PacketEntityType.ZOMBIE.id
