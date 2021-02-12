@@ -66,7 +66,11 @@ protocolManager(pluginRef) {
 }
 ```
 
+### Kotlin runtime
+
+We use [pdm](https://github.com/knightzmc/pdm/) to download the Kotlin stdlib on the server. You do not need to install anything else and other plugins using pdm will use the same downloaded file. 
+
 ### Limitations
 
-- We currently require you to provide Kotlin yourself, either via shading or a separate dependency plugin. We are going to look into setting this up automatically with https://github.com/knightzmc/pdm/.
 - Many data types (including arrays) aren't currently supported. These values are simply skipped, and a wrapper won't be generated for them.
+- In some edge cases the ids for the wrapper don't properly match the packet. This mainly just needs more testing but it should mostly be *okay*.
