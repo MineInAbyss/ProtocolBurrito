@@ -1,8 +1,11 @@
+[![Java CI with Gradle](https://github.com/MineInAbyss/ProtocolBurrito/actions/workflows/gradle-ci.yml/badge.svg)](https://github.com/MineInAbyss/ProtocolBurrito/actions/workflows/gradle-ci.yml)
+[![Package](https://badgen.net/maven/v/metadata-url/repo.mineinabyss.com/releases/com/mineinabyss/protocolburrito/maven-metadata.xml)](https://repo.mineinabyss.com/releases/com/mineinabyss/protocolburrito)
+
 # ProtocolBurrito
 
 A packet wrapper for ProtocolLib generated from [PrismarineJS/minecraft-data](https://github.com/PrismarineJS/minecraft-data) with clean Kotlin syntax and full Java support.
 
-This project is currently HIGHLY WIP, and a lot will change! Don't use it yet but consider starring if this looks interesting to you.
+This project is currently **HIGHLY WIP**, and a lot will change! Don't use it yet as there are sometimes inconsistencies where packets aren't modified correctly. Please consider starring if this looks interesting to you.
 
 ## The goal
 
@@ -28,7 +31,17 @@ We also provide a clean Kotlin DSL wrapper around ProtocolLib's packet intercept
 
 This project can be shaded into your plugin, however it's designed to be used as another plugin on your server (similar to ProtocolLib). Assuming there haven't been any name changes for a packet, this ensures your code stays version safe.
 
-(TODO explain dependency setup and add download links)
+### Gradle
+
+```groovy
+repositories {
+    maven  { url 'https://repo.mineinabyss.com/releases' }
+}
+
+dependencies {
+    compileOnly 'com.mineinabyss:protocolburrito:<version>'
+}
+```
 
 ### Example
 
@@ -73,4 +86,4 @@ We use [pdm](https://github.com/knightzmc/pdm/) to download the Kotlin stdlib on
 ### Limitations
 
 - Many data types (including arrays) aren't currently supported. These values are simply skipped, and a wrapper won't be generated for them.
-- In some edge cases the ids for the wrapper don't properly match the packet. This mainly just needs more testing but it should mostly be *okay*.
+- In some edge cases the ids for the wrapper don't properly match the packet. These are issues with how ProtocolLib uses reflection to modify fields in NMS, we are considering writing our own packet interceptor that will work 100% of the time.

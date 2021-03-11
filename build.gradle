@@ -3,9 +3,8 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm' version "$kotlin_version"
-    id 'org.jetbrains.kotlin.kapt' version '1.4.20'
+    id 'org.jetbrains.kotlin.kapt' version '1.4.31'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id 'io.github.0ffz.github-packages' version '1.2.0'
     id 'me.bristermitten.pdm' version '0.0.32'
 }
 
@@ -59,10 +58,16 @@ task sourceJar(type: Jar, dependsOn: classes) {
 
 publishing {
     repositories {
-        maven githubPackagePublish.invoke("MineInAbyss/ProtocolBurrito")
+        maven {
+            url = "https://repo.mineinabyss.com/releases"
+            credentials {
+                username = findProperty('mineinabyssMavenUsername')
+                password = findProperty('mineinabyssMavenPassword')
+            }
+        }
     }
     publications {
-        gpr(MavenPublication) { publication ->
+        maven(MavenPublication) { publication ->
             artifactId = "protocolburrito"
             project.shadow.component(publication)
 
