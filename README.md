@@ -1,5 +1,6 @@
 [![Java CI with Gradle](https://github.com/MineInAbyss/ProtocolBurrito/actions/workflows/gradle-ci.yml/badge.svg)](https://github.com/MineInAbyss/ProtocolBurrito/actions/workflows/gradle-ci.yml)
 [![Package](https://badgen.net/maven/v/metadata-url/repo.mineinabyss.com/releases/com/mineinabyss/protocolburrito/maven-metadata.xml)](https://repo.mineinabyss.com/releases/com/mineinabyss/protocolburrito)
+[![Contribute](https://shields.io/badge/Contribute-e57be5?logo=github%20sponsors&style=flat&logoColor=white)](https://github.com/MineInAbyss/MineInAbyss/wiki/Setup-and-Contribution-Guide)
 
 # ProtocolBurrito
 
