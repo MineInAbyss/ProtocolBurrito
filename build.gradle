@@ -5,7 +5,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version "$kotlin_version"
     id 'org.jetbrains.kotlin.kapt' version "$kotlin_version"
     id 'com.github.johnrengelman.shadow' version '7.0.0'
-    id 'io.github.slimjar' version "1.2.0"
+    id 'io.github.slimjar' version "1.2.1"
 }
 
 apply from: 'https://raw.githubusercontent.com/MineInAbyss/shared-gradle/83bfbc4a243a34fe53c6ff709ea1ff72f2de6b07/common.gradle'
@@ -37,6 +37,7 @@ allprojects {
 dependencies {
     slim "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "com.mineinabyss:idofront:1.17.1-0.6.23"
+    implementation "io.github.slimjar:slimjar:1.2.4"
     implementation project(":shared")
     compileOnly project(":generator")
     kapt project(":generator")
