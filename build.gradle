@@ -8,7 +8,7 @@ plugins {
     id 'io.github.slimjar' version "1.2.0"
 }
 
-apply from: 'https://raw.githubusercontent.com/MineInAbyss/shared-gradle/master/common.gradle'
+apply from: 'https://raw.githubusercontent.com/MineInAbyss/shared-gradle/83bfbc4a243a34fe53c6ff709ea1ff72f2de6b07/common.gradle'
 
 allprojects {
     apply plugin: 'java'
@@ -20,6 +20,7 @@ allprojects {
         mavenCentral()
         maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots" }
         maven { url "https://repo.dmulloy2.net/nexus/repository/public/" } //ProtocolLib
+        maven { url "https://repo.mineinabyss.com/releases/" }
 //        maven { url "https://repo.codemc.io/repository/maven-releases" }
     }
 
@@ -31,11 +32,11 @@ allprojects {
             exclude group: 'com.comphenix.executors', module: 'BukkitExecutors'
         }
     }
-
 }
 
 dependencies {
     slim "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "com.mineinabyss:idofront:1.17.1-0.6.23"
     implementation project(":shared")
     compileOnly project(":generator")
     kapt project(":generator")

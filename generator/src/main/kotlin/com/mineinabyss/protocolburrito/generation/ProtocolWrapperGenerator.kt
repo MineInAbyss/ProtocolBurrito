@@ -9,7 +9,7 @@ import java.io.File
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
-const val SERVER_VERSION = "1.16.2"
+const val SERVER_VERSION = "1.17"
 const val SERVER_PATH = "minecraft-data/data/pc/$SERVER_VERSION/"
 
 fun generateProtocolWrappers() {
