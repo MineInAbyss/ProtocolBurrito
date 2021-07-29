@@ -1,5 +1,5 @@
 name: ProtocolBurrito
-version: @plugin_version@
+version: ${plugin_version}
 author: Offz
 main: com.mineinabyss.protocolburrito.ProtocolBurritoPlugin
 api-version: 1.16

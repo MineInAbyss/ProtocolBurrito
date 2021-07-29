@@ -9,8 +9,10 @@ import java.io.File
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
-const val SERVER_VERSION = "1.17"
-const val SERVER_PATH = "minecraft-data/data/pc/$SERVER_VERSION/"
+val SERVER_VERSION = "1.17"
+val PROJECT_ROOT = File(AnnotationProcessor.generatedDir).parentFile.parentFile.parentFile.parentFile.parent
+    .replace('\\', '/')
+val SERVER_PATH = "$PROJECT_ROOT/minecraft-data/data/pc/$SERVER_VERSION/"
 
 fun generateProtocolWrappers() {
     val protocolFile = File("$SERVER_PATH/protocol.json").readText()

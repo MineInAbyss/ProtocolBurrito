@@ -1,5 +1,6 @@
 package com.mineinabyss.protocolburrito.generation
 
+import com.mineinabyss.protocolburrito.generation.AnnotationProcessor.Companion.generatedDir
 import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
 import com.squareup.kotlinpoet.FileSpec
