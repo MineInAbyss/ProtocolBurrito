@@ -22,7 +22,7 @@ fun generateNameToIDWrapper(
     packageName: String = "com.mineinabyss.protocolburrito.enums",
 ) {
     println("Generating enum for $fileName")
-    val entitiesFile = File("$SERVER_PATH/$fileName").readText()
+    val entitiesFile = File(SERVER_PATH, fileName).readText()
     val parsed: List<Map<String, Any?>> = JsonPath.parse(entitiesFile)?.read("$")!!
 
     val file = FileSpec.builder(packageName, className)

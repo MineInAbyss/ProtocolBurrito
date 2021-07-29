@@ -6,16 +6,14 @@ import com.nfeld.jsonpathkt.JsonPath
 import com.nfeld.jsonpathkt.extension.read
 import com.squareup.kotlinpoet.*
 import java.io.File
-import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
 val SERVER_VERSION = "1.17"
-val PROJECT_ROOT = File(AnnotationProcessor.generatedDir).parentFile.parentFile.parentFile.parentFile.parent
-    .replace('\\', '/')
-val SERVER_PATH = "$PROJECT_ROOT/minecraft-data/data/pc/$SERVER_VERSION/"
+val PROJECT_ROOT = File(AnnotationProcessor.generatedDir).parentFile.parentFile.parentFile.parentFile.parentFile
+val SERVER_PATH = File(PROJECT_ROOT, "minecraft-data/data/pc/$SERVER_VERSION/")
 
 fun generateProtocolWrappers() {
-    val protocolFile = File("$SERVER_PATH/protocol.json").readText()
+    val protocolFile = File(SERVER_PATH, "protocol.json").readText()
     val parsed: Map<String, List<Any?>> =
         JsonPath.parse(protocolFile)?.read("$.play.toClient.types")!!
 
@@ -29,7 +27,10 @@ fun generateProtocolWrappers() {
                         .filterIsInstance<List<HashMap<String, *>>>()
                         .first()
                 )
-            }.onFailure { println("Skipping ${entry.key} due to error") }
+            }.onFailure {
+                println("Skipping ${entry.key} due to error")
+                it.printStackTrace()
+            }
         }
 }
 

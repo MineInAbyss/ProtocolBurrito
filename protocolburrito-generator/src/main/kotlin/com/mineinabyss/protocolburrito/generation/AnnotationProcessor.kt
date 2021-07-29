@@ -6,25 +6,19 @@ import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
 
 /**
- * TOP 10 HACKY CODE:
- *
- * #1 Trying to make decent codegen with pure gradle
- * #2 Making an annotation processor in kapt which literally just calls a function that then generates code and is
- *    included in the final build.
- *
- * I literally don't know how to do this correctly but this just works™ and every alternative with pure gradle seemed
- * worse...
+ * Add this annotation to a class in another module to get codegen to actually run. Will be unnecessary once we switch
+ * to KSP instead of kapt.
  */
 @Retention(AnnotationRetention.SOURCE)
 annotation class RunGenerator
 
 @AutoService(Processor::class)
-@SupportedSourceVersion(SourceVersion.RELEASE_8)
+@SupportedSourceVersion(SourceVersion.RELEASE_16)
 @SupportedOptions(AnnotationProcessor.KAPT_KOTLIN_GENERATED_OPTION_NAME)
 class AnnotationProcessor : AbstractProcessor() {
     companion object {
         const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
-        lateinit var generatedDir: String
+        var generatedDir: String = "build/generated/source/kaptKotlin/main/"
     }
 
     override fun getSupportedAnnotationTypes() = mutableSetOf(RunGenerator::class.java.name)

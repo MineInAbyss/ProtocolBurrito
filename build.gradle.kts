@@ -1,10 +1,8 @@
 plugins {
-//    kotlin("jvm")
-//    kotlin("")
-    id("com.mineinabyss.conventions.kotlin")
-    id("com.mineinabyss.conventions.papermc")
-    id("com.mineinabyss.conventions.publication")
+    kotlin("jvm")
     kotlin("kapt")
+    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("com.mineinabyss.conventions.publication")
 //    id("com.google.devtools.ksp") version "1.5.21-1.0.0-beta05"
 }
 
@@ -19,6 +17,7 @@ allprojects {
     repositories {
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         maven("https://repo.dmulloy2.net/nexus/repository/public/")//ProtocolLib
+        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     }
 
     dependencies {
@@ -31,12 +30,25 @@ allprojects {
 }
 
 dependencies {
-    slim(kotlin("stdlib-jdk8"))
-    api(project(":shared"))
-    implementation("com.mineinabyss:idofront:1.17.1-0.6.23")
+    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
+    implementation(project(":protocolburrito-api"))
+    compileOnly(project(":protocolburrito-generator"))
+    kapt(project(":protocolburrito-generator"))
+}
 
-    compileOnly(project(":generator"))
-    kapt(project(":generator"))
+tasks {
+    shadowJar {
+        archiveClassifier.set("")
+    }
+
+    sourcesJar {
+        from(sourceSets.main.get().allSource)
+        from("$buildDir/generated/source/kaptKotlin/main")
+    }
+
+    build {
+        dependsOn(project(":protocolburrito-minecraft").tasks.build)
+    }
 }
 
 //sourceSets {

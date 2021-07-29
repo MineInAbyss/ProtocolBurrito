@@ -25,4 +25,8 @@ pluginManagement {
     }
 }
 
-include("generator", "shared")
+include(
+    "protocolburrito-generator",
+    "protocolburrito-api",
+    "protocolburrito-minecraft"
+)
