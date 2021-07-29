@@ -32,7 +32,7 @@ allprojects {
 
 dependencies {
     slim(kotlin("stdlib-jdk8"))
-    implementation(project(":shared"))
+    api(project(":shared"))
     implementation("com.mineinabyss:idofront:1.17.1-0.6.23")
 
     compileOnly(project(":generator"))

@@ -1,4 +1,4 @@
-rootProject.name = "ProtocolBurrito"
+rootProject.name = "protocolburrito"
 
 pluginManagement {
     val miaConventionsVersion: String by settings
