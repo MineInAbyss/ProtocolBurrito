@@ -47,7 +47,7 @@ tasks {
     }
 
     build {
-        dependsOn(project(":protocolburrito-minecraft").tasks.build)
+        dependsOn(project(":protocolburrito-plugin").tasks.build)
     }
 }
 

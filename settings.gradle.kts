@@ -28,5 +28,5 @@ pluginManagement {
 include(
     "protocolburrito-generator",
     "protocolburrito-api",
-    "protocolburrito-minecraft"
+    "protocolburrito-plugin"
 )
