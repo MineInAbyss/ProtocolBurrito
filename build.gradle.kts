@@ -3,6 +3,7 @@ plugins {
     kotlin("kapt")
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("com.mineinabyss.conventions.publication")
+    id("de.undercouch.download") version "4.1.2"
 //    id("com.google.devtools.ksp") version "1.5.21-1.0.0-beta05"
 }
 
@@ -22,7 +23,7 @@ allprojects {
 
     dependencies {
         compileOnly(kotlin("stdlib-jdk8"))
-        compileOnly("com.comphenix.protocol:ProtocolLib:4.5.0") {
+        compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0") {
             // this dep wasn"t being resolved.
             exclude(group = "com.comphenix.executors")
         }
@@ -36,7 +37,12 @@ dependencies {
     kapt(project(":protocolburrito-generator"))
 }
 
+
 tasks {
+    val downloadMappings by register<de.undercouch.gradle.tasks.download.Download>("Download mappings") {
+        src("https://launcher.mojang.com/v1/objects/f6cae1c5c1255f68ba4834b16a0da6a09621fe13/server.txt")
+        dest(file("mappings/server.txt"))
+    }
     shadowJar {
         archiveClassifier.set("")
     }
@@ -47,18 +53,6 @@ tasks {
     }
 
     build {
-        dependsOn(project(":protocolburrito-plugin").tasks.build)
+        dependsOn(downloadMappings, project(":protocolburrito-plugin").tasks.build)
     }
 }
-
-//sourceSets {
-//    main {
-//        java {
-//            srcDir("build/generated/ksp/main/kotlin/")
-//        }
-//    }
-//}
-//
-//ksp {
-//    arg("minecraftDataDir", file("minecraft-data/data/pc/1.17").absolutePath)
-//}
