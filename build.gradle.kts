@@ -52,6 +52,10 @@ tasks {
         from("$buildDir/generated/source/kaptKotlin/main")
     }
 
+    publish {
+        dependsOn(downloadMappings)
+    }
+
     build {
         dependsOn(downloadMappings, project(":protocolburrito-plugin").tasks.build)
     }
