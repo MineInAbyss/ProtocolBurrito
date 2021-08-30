@@ -17,6 +17,15 @@ class ProtocolManagerBurrito(
     val protocolManager: ProtocolManager,
     val plugin: Plugin
 ) : ProtocolManager by protocolManager {
+    inline fun <T> onSend(
+        crossinline instantiate: (PacketContainer) -> T,
+        vararg packets: PacketType,
+        priority: ListenerPriority = ListenerPriority.NORMAL,
+        crossinline onSend: T.(event: PacketEvent) -> Unit
+    ) {
+        onSend(*packets, priority = priority) { instantiate(packet).onSend(this) }
+    }
+
     inline fun ProtocolManager.onSend(
         vararg packets: PacketType,
         priority: ListenerPriority = ListenerPriority.NORMAL,
@@ -27,6 +36,15 @@ class ProtocolManagerBurrito(
                 onSend(event)
             }
         })
+    }
+
+    inline fun <T> onReceive(
+        crossinline instantiate: (PacketContainer) -> T,
+        vararg packets: PacketType,
+        priority: ListenerPriority = ListenerPriority.NORMAL,
+        crossinline onReceive: T.(event: PacketEvent) -> Unit
+    ) {
+        onReceive(*packets, priority = priority) { instantiate(packet).onReceive(this) }
     }
 
     inline fun ProtocolManager.onReceive(
