@@ -80,6 +80,39 @@ protocolManager(pluginRef) {
 }
 ```
 
+### Sending packets
+
+Normally, you might have to do something ugly like the following:
+
+````java
+PacketContainer fakeExplosion = new PacketContainer(PacketType.Play.Server.EXPLOSION);
+fakeExplosion.getDoubles().
+    write(0, player.getLocation().getX()).
+    write(1, player.getLocation().getY()).
+    write(2, player.getLocation().getZ());
+fakeExplosion.getFloat().write(0, 3.0F);
+
+try {
+    protocolManager.sendServerPacket(player, fakeExplosion);
+} catch (InvocationTargetException e) {
+    throw new RuntimeException(
+        "Cannot send packet " + fakeExplosion, e);
+}
+````
+
+But with ProtocolBurrito, you can turn that into something more manageable:
+
+````kotlin
+val fakeExplosion = ClientboundExplodePacket(PacketContainer(PacketType.Play.Server.EXPLOSION))
+fakeExplosion.x = player.location.x
+fakeExplosion.y = player.location.y
+fakeExplosion.z = player.location.z
+
+fakeExplosion.power = 3.0f
+
+fakeExplosion.handle.sendTo(player)
+````
+
 ### Kotlin runtime
 
 We use [pdm](https://github.com/knightzmc/pdm/) to download the Kotlin stdlib on the server. You do not need to install anything else and other plugins using pdm will use the same downloaded file. 
