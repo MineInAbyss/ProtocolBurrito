@@ -1,12 +1,12 @@
+# ProtocolBurrito
+
 [![Java CI with Gradle](https://github.com/MineInAbyss/ProtocolBurrito/actions/workflows/gradle-ci.yml/badge.svg)](https://github.com/MineInAbyss/ProtocolBurrito/actions/workflows/gradle-ci.yml)
 [![Package](https://badgen.net/maven/v/metadata-url/repo.mineinabyss.com/releases/com/mineinabyss/protocolburrito/maven-metadata.xml)](https://repo.mineinabyss.com/releases/com/mineinabyss/protocolburrito)
 [![Contribute](https://shields.io/badge/Contribute-e57be5?logo=github%20sponsors&style=flat&logoColor=white)](https://github.com/MineInAbyss/MineInAbyss/wiki/Setup-and-Contribution-Guide)
 
-# ProtocolBurrito
+A packet wrapper for ProtocolLib generated from [PrismarineJS/minecraft-data](https://github.com/PrismarineJS/minecraft-data) and Minecraft's obfuscation mappings. Comes with clean Kotlin syntax and full Java support.
 
-A packet wrapper for ProtocolLib generated from [PrismarineJS/minecraft-data](https://github.com/PrismarineJS/minecraft-data) with clean Kotlin syntax and full Java support.
-
-This project is currently **HIGHLY WIP**, and a lot will change! Don't use it yet as there are sometimes inconsistencies where packets aren't modified correctly. Please consider starring if this looks interesting to you.
+This project is currently **HIGHLY WIP**! Don't use it if you are a fan of stable codebases.
 
 ## The goal
 
@@ -82,7 +82,7 @@ protocolManager(pluginRef) {
 
 ### Sending packets
 
-Normally, you might have to do something ugly like the following:
+##### An example from ProtocolLib
 
 ````java
 PacketContainer fakeExplosion = new PacketContainer(PacketType.Play.Server.EXPLOSION);
@@ -100,7 +100,7 @@ try {
 }
 ````
 
-But with ProtocolBurrito, you can turn that into something more manageable:
+##### And the ProtocolBurrito equivalent
 
 ````kotlin
 val fakeExplosion = ClientboundExplodePacket(PacketContainer(PacketType.Play.Server.EXPLOSION))
@@ -112,6 +112,9 @@ fakeExplosion.power = 3.0f
 
 fakeExplosion.handle.sendTo(player)
 ````
+
+We retain all version safety benefits of ProtocolLib as we are calling the exact same functions, just
+in a more human-readable way!
 
 ### Kotlin runtime
 
