@@ -1,6 +1,7 @@
 package com.mineinabyss.protocolburrito.generation
 
 fun main() {
-    generateEntityIdMapper()
-    generateProtocolWrappers()
+//    generateEntityIdMapper()
+//    generateProtocolWrappers()
+    generateProtocolExtensions()
 }
