@@ -1,13 +1,24 @@
 package com.mineinabyss.protocolburrito
 
 object FieldHelpers {
-    fun <T : Any> getField(forObject: Any, type: Class<T>, index: Int): T {
+    inline fun <reified T : Any> getField(forObject: Any, index: Int): T =
+        getField(T::class.java, forObject, index)
+
+    fun <T : Any> getField(type: Class<T>, forObject: Any, index: Int): T {
         var id = 0
-        return forObject::class.java.fields.first { it.type.kotlin == type && index == id++ }.get(forObject) as T
+        return forObject::class.java.declaredFields.first { it.type.kotlin.javaObjectType == type && index == id++ }
+            .also {
+                it.isAccessible = true
+            }.get(forObject) as T
     }
 
-    fun <T : Any> setField(forObject: Any, type: Class<T>, index: Int, value: T) {
+    inline fun <reified T : Any> setField(forObject: Any, index: Int, value: T?) =
+        setField(T::class.java, forObject, index, value)
+
+    fun <T : Any> setField(type: Class<T>, forObject: Any, index: Int, value: T?) {
         var id = 0
-        forObject::class.java.fields.first { it.type == type && index == id++ }.set(forObject, value)
+        forObject::class.java.declaredFields.first { it.type.kotlin.javaObjectType == type && index == id++ }.also {
+            it.isAccessible = true
+        }.set(forObject, value)
     }
 }

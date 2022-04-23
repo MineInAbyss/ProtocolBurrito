@@ -7,26 +7,31 @@ import com.comphenix.protocol.events.ListenerPriority
 import com.comphenix.protocol.events.PacketAdapter
 import com.comphenix.protocol.events.PacketContainer
 import com.comphenix.protocol.events.PacketEvent
+import com.comphenix.protocol.injector.packet.PacketRegistry
+import com.mineinabyss.protocolburrito.WrappedCompanion
+import com.mineinabyss.protocolburrito.WrappedPacket
 import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import java.util.*
+import kotlin.reflect.KFunction1
+import kotlin.reflect.full.companionObject
+import kotlin.reflect.full.companionObjectInstance
 
 class ProtocolManagerBurrito(
     val protocolManager: ProtocolManager,
     val plugin: Plugin
 ) : ProtocolManager by protocolManager {
-    inline fun <T> onSend(
-        crossinline instantiate: (PacketContainer) -> T,
-        vararg packets: PacketType,
+    inline fun  <reified T: WrappedPacket> onSend(
         priority: ListenerPriority = ListenerPriority.NORMAL,
-        crossinline onSend: T.(event: PacketEvent) -> Unit
+        crossinline onSend: PacketEvent.(wrapped: T) -> Unit
     ) {
-        onSend(*packets, priority = priority) { instantiate(packet).onSend(this) }
+        val companion = T::class.companionObjectInstance as WrappedCompanion
+        onSend(companion.type, priority = priority) { onSend(companion.wrap(packet.handle) as T) }
     }
 
-    inline fun ProtocolManager.onSend(
+    inline fun onSend(
         vararg packets: PacketType,
         priority: ListenerPriority = ListenerPriority.NORMAL,
         crossinline onSend: PacketEvent.() -> Unit
@@ -38,16 +43,15 @@ class ProtocolManagerBurrito(
         })
     }
 
-    inline fun <T> onReceive(
-        crossinline instantiate: (PacketContainer) -> T,
-        vararg packets: PacketType,
+    inline fun <reified T> onReceive(
         priority: ListenerPriority = ListenerPriority.NORMAL,
-        crossinline onReceive: T.(event: PacketEvent) -> Unit
+        crossinline onReceive: PacketEvent.(wrapped: T) -> Unit
     ) {
-        onReceive(*packets, priority = priority) { instantiate(packet).onReceive(this) }
+        val companion = T::class.companionObjectInstance as WrappedCompanion
+        onReceive(companion.type, priority = priority) { onReceive(companion.wrap(packet.handle) as T) }
     }
 
-    inline fun ProtocolManager.onReceive(
+    inline fun onReceive(
         vararg packets: PacketType,
         priority: ListenerPriority = ListenerPriority.NORMAL,
         crossinline onSend: PacketEvent.() -> Unit
