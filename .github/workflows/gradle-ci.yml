@@ -4,6 +4,7 @@ on:
   push:
     paths-ignore:
       - '**.md'
+      - 'CODEOWNERS'
 
 jobs:
   build:
@@ -23,8 +24,12 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      # We build twice to include generated files lol
       - name: Build
-        run: gradle build --stacktrace
+        run: gradle build
+
+      - name: Build another time :)
+        run: gradle build
 
       - name: Upload build
         uses: actions/upload-artifact@v1

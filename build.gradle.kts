@@ -1,3 +1,5 @@
+val serverVersion: String by project
+
 plugins {
     kotlin("jvm")
     id("com.mineinabyss.conventions.kotlin")
@@ -13,6 +15,8 @@ repositories {
 
 allprojects {
     apply(plugin = "java")
+
+    version = rootProject.version
 
     repositories {
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
@@ -30,11 +34,9 @@ allprojects {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:$serverVersion")
     api(project(":protocolburrito-api"))
-    compileOnly(project(":protocolburrito-generator"))
 }
-
 
 sourceSets["main"].java.srcDir(file("$rootDir/protocolburrito-generator/build/generated/burrito/main"))
 
@@ -43,6 +45,7 @@ tasks {
         dependsOn(reobfJar)
         dependsOn(project(":protocolburrito-plugin").tasks.build)
     }
+
     shadowJar {
         archiveClassifier.set("")
     }

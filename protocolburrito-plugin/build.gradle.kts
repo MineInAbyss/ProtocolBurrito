@@ -9,9 +9,6 @@ plugins {
 }
 
 dependencies {
-    // MineInAbyss platform
-//    spigot(libs.kotlin.stdlib)
-
     implementation(project(":"))
     implementation("com.mineinabyss:idofront:$idofrontVersion")
 }
@@ -21,5 +18,9 @@ tasks {
         minimize {
             include(dependency("com.mineinabyss:idofront.*:.*"))
         }
+    }
+
+    assemble {
+        dependsOn(project(":protocolburrito-generator").tasks.assemble)
     }
 }

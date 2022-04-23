@@ -6,6 +6,7 @@ on:
       - master
     paths-ignore:
       - '**.md'
+      - 'CODEOWNERS'
 
 jobs:
   build:
@@ -26,8 +27,12 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      # We build twice to include generated files lol
       - name: Run gradle build and publish
-        run: gradle build publish -PmineinabyssMavenUsername=${{ secrets.MAVEN_PUBLISH_USERNAME }} -PmineinabyssMavenPassword=${{ secrets.MAVEN_PUBLISH_PASSWORD }}
+        run: gradle build
+
+      - name: Run gradle build and publish
+        run: gradle publish -PmineinabyssMavenUsername=${{ secrets.MAVEN_PUBLISH_USERNAME }} -PmineinabyssMavenPassword=${{ secrets.MAVEN_PUBLISH_PASSWORD }}
 
       - name: Get version from gradle
         shell: bash
@@ -43,6 +48,5 @@ jobs:
           prerelease: false
           automatic_release_tag: v${{ steps.extract_version.outputs.version }}
           files: |
-            protocolburrito-plugin/build/libs/protocolburrito-plugin*.jar
-            !*-dev*
+            protocolburrito-plugin/build/libs/protocolburrito-plugin*[0-9].jar
 
