@@ -1,36 +1,30 @@
+<div align="center">
+
 # ProtocolBurrito
 
-[![Java CI with Gradle](https://github.com/MineInAbyss/ProtocolBurrito/actions/workflows/gradle-ci.yml/badge.svg)](https://github.com/MineInAbyss/ProtocolBurrito/actions/workflows/gradle-ci.yml)
-[![Package](https://badgen.net/maven/v/metadata-url/repo.mineinabyss.com/releases/com/mineinabyss/protocolburrito/maven-metadata.xml)](https://repo.mineinabyss.com/releases/com/mineinabyss/protocolburrito)
+[![Package](https://img.shields.io/maven-metadata/v?metadataUrl=https://repo.mineinabyss.com/releases/com/mineinabyss/protocolburrito/maven-metadata.xml)](https://repo.mineinabyss.com/#/releases/com/mineinabyss/protocolburrito)
 [![Contribute](https://shields.io/badge/Contribute-e57be5?logo=github%20sponsors&style=flat&logoColor=white)](https://github.com/MineInAbyss/MineInAbyss/wiki/Setup-and-Contribution-Guide)
+</div>
 
-A packet wrapper for ProtocolLib generated from [PrismarineJS/minecraft-data](https://github.com/PrismarineJS/minecraft-data) and Minecraft's obfuscation mappings. Comes with clean Kotlin syntax and full Java support.
+A packet wrapper for ProtocolLib generated from Minecraft's obfuscation mappings, thanks to PaperMC's [userdev](https://github.com/PaperMC/paperweight/tree/main/paperweight-userdev) project. Comes with clean Kotlin syntax and Java support.
 
 This project is currently **HIGHLY WIP**! Don't use it if you are a fan of stable codebases.
 
 ## The goal
 
-ProtocolLib is great, but it's extremely painful to actually modify data in packets because we need to access fields via integers and constantly refer to the [Protocol Wiki](https://wiki.vg/Protocol). This project allows you to wrap a packet and modify fields with actual names!
+ProtocolLib is great, but it's extremely painful to actually modify data in packets because we need to access fields via integers and constantly refer to the [Protocol Wiki](https://wiki.vg/Protocol). This project takes the server packet classes and exposes all their private fields by accessing them with integers. The [userdev](https://github.com/PaperMC/paperweight/tree/main/paperweight-userdev) Gradle plugin lets you work directly with the data and avoid messy ProtocolLib code.
 
-### What is minecraft-data
+### Costs
 
-minecraft-data is a *"Language independent module providing minecraft data for minecraft clients, servers and libraries."* In essence it's a JSON representation of the Minecraft protocol among other things.
-
-This project contains a generator which looks through these files for a specific version in minecraft-data and generates wrappers meant to be used alongside ProtocolLib.
-
-### Other projects
-
-Though some other wrappers exist such as https://github.com/dmulloy2/PacketWrapper, it seems a bit outdated and designed for one-off use cases, recommending plugin authors to copy-paste classes.
-
-We also think Kotlin's properties with getters and setters are perfect for a project like this and would like to make use of some more Kotlin features.
+You lose on some version safety by depending on NMS code. However, with the new mappings, updating is far easier and the code for complex operations more maintainable.
 
 ## Kotlin DSL
 
-We also provide a clean Kotlin DSL wrapper around ProtocolLib's packet interceptors, plus some extension functions for sending packets. 
+We also provide a clean Kotlin DSL wrapper around ProtocolLib's packet interceptors, plus some extension functions for sending packets, or getting an entity from its id.
 
 ## Usage
 
-This project can be shaded into your plugin, however it's designed to be used as another plugin on your server (similar to ProtocolLib). Assuming there haven't been any name changes for a packet, this ensures your code stays version safe.
+This project can be shaded into your plugin, however it's designed to be used as another plugin on your server (similar to ProtocolLib).
 
 ### Gradle
 
@@ -46,8 +40,6 @@ dependencies {
 
 ### Example
 
-*Super not finalized but should give you a general idea of what the project does! We'll get some java examples in here once things are more stable.*
-
 This is a snippet of code sends zombie as entity type for our custom mobs from another project:
 
 ##### Before
@@ -61,7 +53,7 @@ protocolManager.addPacketListener(object : PacketAdapter(
     PacketType.Play.Server.SPAWN_ENTITY_LIVING
 ) {
     override fun onPacketSending(event: PacketEvent) {
-        if (Bukkit.getEntity(event.packet.uuiDs.read(0))?.isCustomMob == true)
+        if (Bukkit.getEntity(event.packet.uuiDs.read(0)).isCustomMob)
             event.packet.integers.write(1, 102)
     }
 })
@@ -71,11 +63,9 @@ protocolManager.addPacketListener(object : PacketAdapter(
 
 ```kotlin
 protocolManager(pluginRef) {
-    onSend(PacketType.Play.Server.SPAWN_ENTITY_LIVING) {
-        PacketSpawnEntityLiving(packet).apply {
-            if (entity(entityUUID)?.isCustomEntity == true)
-                type = PacketEntityType.ZOMBIE.id
-        }
+    onSend<ClientboundAddMobPacketWrap> { wrap ->
+        if (entity(wrap.id).isCustomMob)
+            wrap.type = Registry.ENTITY_TYPE.getId(NMSEntityType.ZOMBIE)
     }
 }
 ```
@@ -102,25 +92,28 @@ try {
 
 ##### And the ProtocolBurrito equivalent
 
-````kotlin
-val fakeExplosion = ClientboundExplodePacket(PacketContainer(PacketType.Play.Server.EXPLOSION))
-fakeExplosion.x = player.location.x
-fakeExplosion.y = player.location.y
-fakeExplosion.z = player.location.z
+```kotlin
+val loc = player.location
+// The NMS class already has a public constructor!
+val fakeExplosion = ClientboundExplodePacket(loc.x, loc.y, loc.z, 3.0f, listOf(), null)
+fakeExplosion.sendTo(player) 
+```
 
-fakeExplosion.power = 3.0f
+And if the constructor is too complicated, you can fall back to:
 
-fakeExplosion.handle.sendTo(player)
-````
+```kotlin
+val fakeExplosion = PacketContainer(PacketType.Play.Server.EXPLOSION)
+(fakeExplosion.handle as ClientboundExplodePacket).wrap().apply {
+    x = loc.x
+    y = loc.y
+    z = loc.z
+    power = 3.0f
+}
+fakeExplosion.sendTo(player) 
+```
 
-We retain all version safety benefits of ProtocolLib as we are calling the exact same functions, just
-in a more human-readable way!
+We lost some version safety, but the increased readability ensures future updates will be far easier when something in the packet inevitably changes, no more looking up integers!
 
 ### Kotlin runtime
 
-We use [pdm](https://github.com/knightzmc/pdm/) to download the Kotlin stdlib on the server. You do not need to install anything else and other plugins using pdm will use the same downloaded file. 
-
-### Limitations
-
-- Many data types (including arrays) aren't currently supported. These values are simply skipped, and a wrapper won't be generated for them.
-- In some edge cases the ids for the wrapper don't properly match the packet. These are issues with how ProtocolLib uses reflection to modify fields in NMS, we are considering writing our own packet interceptor that will work 100% of the time.
+We're currently trying to make this seamless.
