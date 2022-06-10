@@ -9,15 +9,16 @@ plugins {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     google()
-    maven("https://papermc.io/repo/repository/maven-public/")
+    maven("https://repo.papermc.io/repository/maven-public/")
 }
 
 dependencies {
     paperDevBundle(serverVersion)
     implementation(kotlin("reflect"))
-    implementation("io.papermc.paper:paper-server:userdev-1.18.2-R0.1-SNAPSHOT")
-    implementation("com.comphenix.protocol:ProtocolLib:4.7.0")
+    implementation("io.papermc.paper:paper-server:userdev-1.19-R0.1-SNAPSHOT")
+    implementation("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT")
     implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.0")
     implementation("com.squareup:kotlinpoet:1.10.1")
     implementation(project(":protocolburrito-api"))
