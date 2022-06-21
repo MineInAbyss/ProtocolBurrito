@@ -1,0 +1,6 @@
+[versions]
+
+[libraries]
+kotlinpoet = "com.squareup:kotlinpoet:1.10.1"
+reflections = "org.reflections:reflections:0.9.12"
+minecraft-plugin-protocollib = "com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT"

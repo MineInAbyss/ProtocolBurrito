@@ -18,10 +18,6 @@ import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
-//val SERVER_VERSION = "1.17"
-//val PROJECT_ROOT = File("")//File(AnnotationProcessor.generatedDir)//.parentFile.parentFile.parentFile.parentFile.parentFile
-//val SERVER_PATH = File(PROJECT_ROOT, "minecraft-data/data/pc/$SERVER_VERSION/")
-//val MAPPINGS = File(PROJECT_ROOT, "mappings/server.txt")
 val OUTPUT_DIR = File("build/generated/burrito/main/")
 
 fun generateProtocolExtensions() {
@@ -32,6 +28,7 @@ fun generateProtocolExtensions() {
             val type = field.returnType
             if (field.visibility == KVisibility.PUBLIC) return@mapNotNull null
             if (field.returnType.jvmErasure.visibility != KVisibility.PUBLIC) return@mapNotNull null
+            if (field.returnType.arguments.any { it.type?.jvmErasure?.visibility != KVisibility.PUBLIC }) return@mapNotNull null
             val index = indices.getOrPut(type) { AtomicInteger(0) }
             PropertySpec.builder(field.name, type.asTypeName().copy(annotations = listOf())) //.let {
                 .getter(

@@ -18,11 +18,9 @@ pluginManagement {
         kotlin("plugin.serialization") version kotlinVersion
     }
 
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.id.startsWith("com.mineinabyss.conventions"))
-                useVersion(idofrontVersion)
-        }
+    resolutionStrategy.eachPlugin {
+        if (requested.id.id.startsWith("com.mineinabyss.conventions"))
+            useVersion(idofrontVersion)
     }
 }
 
@@ -35,9 +33,8 @@ dependencyResolutionManagement {
     }
 
     versionCatalogs {
-        create("libs") {
-            from("com.mineinabyss:catalog:$idofrontVersion")
-        }
+        create("libs").from("com.mineinabyss:catalog:$idofrontVersion")
+        create("mylibs").from(files("gradle/mylibs.versions.toml"))
     }
 }
 
