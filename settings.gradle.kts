@@ -6,9 +6,10 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
+        mavenLocal()
         google()
         maven("https://repo.mineinabyss.com/releases")
-        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://repo.papermc.io/repository/maven-public/")
     }
 
     plugins {
@@ -17,11 +18,9 @@ pluginManagement {
         kotlin("plugin.serialization") version kotlinVersion
     }
 
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.id.startsWith("com.mineinabyss.conventions"))
-                useVersion(idofrontVersion)
-        }
+    resolutionStrategy.eachPlugin {
+        if (requested.id.id.startsWith("com.mineinabyss.conventions"))
+            useVersion(idofrontVersion)
     }
 }
 
@@ -29,13 +28,13 @@ dependencyResolutionManagement {
     val idofrontVersion: String by settings
 
     repositories {
+        mavenLocal()
         maven("https://repo.mineinabyss.com/releases")
     }
 
     versionCatalogs {
-        create("libs") {
-            from("com.mineinabyss:catalog:$idofrontVersion")
-        }
+        create("libs").from("com.mineinabyss:catalog:$idofrontVersion")
+        create("mylibs").from(files("gradle/mylibs.versions.toml"))
     }
 }
 

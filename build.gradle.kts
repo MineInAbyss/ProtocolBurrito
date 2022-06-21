@@ -10,6 +10,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     google()
 }
 
@@ -19,6 +20,7 @@ allprojects {
     version = rootProject.version
 
     repositories {
+        mavenLocal()
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         maven("https://repo.dmulloy2.net/nexus/repository/public/")//ProtocolLib
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
@@ -26,7 +28,7 @@ allprojects {
 
     dependencies {
         compileOnly(kotlin("stdlib-jdk8"))
-        compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0") {
+        compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT") {
             // this dep wasn"t being resolved.
             exclude(group = "com.comphenix.executors")
         }
