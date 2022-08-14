@@ -16,9 +16,9 @@ repositories {
 dependencies {
     implementation(kotlin("reflect"))
     implementation("io.papermc.paper:paper-server:userdev-$serverVersion")
-    implementation(mylibs.minecraft.plugin.protocollib)
-    implementation(mylibs.kotlinpoet)
-    implementation(mylibs.reflections)
+    implementation(burritoLibs.minecraft.plugin.protocollib)
+    implementation(burritoLibs.kotlinpoet)
+    implementation(burritoLibs.reflections)
     implementation(project(":protocolburrito-api"))
     implementation(kotlin("reflect"))
 }
