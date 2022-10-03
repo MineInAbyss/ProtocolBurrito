@@ -11,16 +11,10 @@ plugins {
 
 dependencies {
     implementation(project(":"))
-    implementation("com.mineinabyss:idofront:$idofrontVersion")
+    implementation(libs.bundles.idofront.core)
 }
 
 tasks {
-    shadowJar {
-        minimize {
-            include(dependency("com.mineinabyss:idofront.*:.*"))
-        }
-    }
-
     assemble {
         dependsOn(project(":protocolburrito-generator").tasks.assemble)
     }

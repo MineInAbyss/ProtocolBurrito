@@ -28,8 +28,8 @@ allprojects {
 
     dependencies {
         compileOnly(kotlin("stdlib-jdk8"))
-        compileOnly(burritoLibs.minecraft.plugin.protocollib) {
-            // this dep wasn"t being resolved.
+        compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT") {
+            // this dep wasn't being resolved.
             exclude(group = "com.comphenix.executors")
         }
     }
@@ -51,8 +51,8 @@ tasks {
     shadowJar {
         archiveClassifier.set("")
     }
-
-    sourcesJar {
-        from(sourceSets.main.get().allSource)
-    }
+//
+//    sourcesJar {
+//        from(sourceSets.main.get().allSource)
+//    }
 }
