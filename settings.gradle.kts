@@ -6,7 +6,6 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        mavenLocal()
         google()
         maven("https://repo.mineinabyss.com/releases")
         maven("https://repo.papermc.io/repository/maven-public/")
@@ -28,7 +27,6 @@ dependencyResolutionManagement {
     val idofrontVersion: String by settings
 
     repositories {
-        mavenLocal()
         maven("https://repo.mineinabyss.com/releases")
     }
 

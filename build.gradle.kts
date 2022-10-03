@@ -5,6 +5,7 @@ plugins {
     id("com.mineinabyss.conventions.kotlin")
     id("com.mineinabyss.conventions.nms")
     id("com.mineinabyss.conventions.publication")
+    id("com.mineinabyss.conventions.autoversion")
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
@@ -20,7 +21,6 @@ allprojects {
     version = rootProject.version
 
     repositories {
-        mavenLocal()
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         maven("https://repo.dmulloy2.net/nexus/repository/public/")//ProtocolLib
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
@@ -29,7 +29,7 @@ allprojects {
     dependencies {
         compileOnly(kotlin("stdlib-jdk8"))
         compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT") {
-            // this dep wasn"t being resolved.
+            // this dep wasn't being resolved.
             exclude(group = "com.comphenix.executors")
         }
     }
@@ -51,8 +51,8 @@ tasks {
     shadowJar {
         archiveClassifier.set("")
     }
-
-    sourcesJar {
-        from(sourceSets.main.get().allSource)
-    }
+//
+//    sourcesJar {
+//        from(sourceSets.main.get().allSource)
+//    }
 }
