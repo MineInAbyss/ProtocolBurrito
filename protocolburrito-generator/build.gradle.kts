@@ -5,6 +5,7 @@ val serverVersion: String by project
 plugins {
     kotlin("jvm")
     id("com.mineinabyss.conventions.nms")
+    id("com.mineinabyss.conventions.autoversion")
 }
 
 repositories {
