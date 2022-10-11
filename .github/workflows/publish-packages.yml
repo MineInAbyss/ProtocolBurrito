@@ -1,4 +1,4 @@
-name: Publish Packages
+name: Publish GitHub Packages
 
 on:
   push:
@@ -6,30 +6,26 @@ on:
       - master
     paths-ignore:
       - '**.md'
-      - '.github/CODEOWNERS'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'true'
+      - uses: actions/checkout@v3
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v3
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
-          cache: gradle
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      # We build twice to include generated files lol
-      - name: Run gradle build and publish
-        run: gradle build
+      - name: Set env variable from latest maven version
+        run: >
+          echo "RELEASE_VERSION=$( \
+            curl https://repo.mineinabyss.com/releases/com/mineinabyss/protocolburrito/maven-metadata.xml | \
+            grep -oP '(?!<latest>)[\d\.]*(?=</latest>)' \
+          )" >> $GITHUB_ENV
 
       - name: Run gradle build and publish
         run: gradle build publish -PmineinabyssMavenUsername=${{ secrets.MAVEN_PUBLISH_USERNAME }} -PmineinabyssMavenPassword=${{ secrets.MAVEN_PUBLISH_PASSWORD }}
@@ -38,10 +34,10 @@ jobs:
         shell: bash
         id: extract_version
         run: |
-          version=`./gradlew properties --no-daemon --console=plain -q | grep "^version:" | awk '{printf $2}'`
+          version=`gradle properties --no-daemon --console=plain -q | grep "^version:" | awk '{printf $2}'`
           echo "::set-output name=version::$version"
 
-      - name: Create GitHub Release for shaded idofront platfrom
+      - name: Create GitHub Release
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
