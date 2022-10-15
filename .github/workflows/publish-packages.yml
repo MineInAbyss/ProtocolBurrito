@@ -27,6 +27,10 @@ jobs:
             grep -oP '(?!<latest>)[\d\.]*(?=</latest>)' \
           )" >> $GITHUB_ENV
 
+      # We build twice to include generated files lol
+      - name: Run gradle build to generate files
+        run: gradle build
+
       - name: Run gradle build and publish
         run: gradle build publish -PmineinabyssMavenUsername=${{ secrets.MAVEN_PUBLISH_USERNAME }} -PmineinabyssMavenPassword=${{ secrets.MAVEN_PUBLISH_PASSWORD }}
 
