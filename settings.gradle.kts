@@ -11,12 +11,6 @@ pluginManagement {
         maven("https://repo.papermc.io/repository/maven-public/")
     }
 
-    plugins {
-        val kotlinVersion: String by settings
-        kotlin("jvm") version kotlinVersion
-        kotlin("plugin.serialization") version kotlinVersion
-    }
-
     resolutionStrategy.eachPlugin {
         if (requested.id.id.startsWith("com.mineinabyss.conventions"))
             useVersion(idofrontVersion)

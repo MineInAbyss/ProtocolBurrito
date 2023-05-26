@@ -1,12 +1,8 @@
-val serverVersion: String by project
-
 plugins {
-    kotlin("jvm")
-    id("com.mineinabyss.conventions.kotlin")
+    id("com.mineinabyss.conventions.kotlin.jvm")
     id("com.mineinabyss.conventions.nms")
     id("com.mineinabyss.conventions.publication")
     id("com.mineinabyss.conventions.autoversion")
-    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 repositories {
@@ -26,9 +22,11 @@ allprojects {
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     }
 
+    val libs = rootProject.libs
+
     dependencies {
         compileOnly(kotlin("stdlib-jdk8"))
-        compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT") {
+        compileOnly(libs.minecraft.plugin.protocollib) {
             // this dep wasn't being resolved.
             exclude(group = "com.comphenix.executors")
         }
@@ -36,7 +34,6 @@ allprojects {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:$serverVersion")
     api(project(":protocolburrito-api"))
 }
 
@@ -47,12 +44,4 @@ tasks {
         dependsOn(reobfJar)
         dependsOn(project(":protocolburrito-plugin").tasks.build)
     }
-
-    shadowJar {
-        archiveClassifier.set("")
-    }
-//
-//    sourcesJar {
-//        from(sourceSets.main.get().allSource)
-//    }
 }

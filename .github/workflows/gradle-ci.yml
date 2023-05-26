@@ -1,38 +1,24 @@
 name: Java CI with Gradle
 
 on:
-  push:
-    paths-ignore:
-      - '**.md'
-      - '.github/CODEOWNERS'
+  pull_request:
+
+concurrency:
+  cancel-in-progress: true
+  group: ci-${{ github.ref }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'true'
+      - uses: actions/checkout@v3
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v3
         with:
-          distribution: adopt
+          distribution: temurin
           java-version: 17
           cache: gradle
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      # We build twice to include generated files lol
-      - name: Build
+      - name: Run build
         run: gradle build
-
-      - name: Build another time :)
-        run: gradle build
-
-      - name: Upload build
-        uses: actions/upload-artifact@v1
-        with:
-          name: build
-          path: build/libs
