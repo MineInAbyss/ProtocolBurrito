@@ -25,14 +25,7 @@ configurations {
 }
 
 tasks {
-    val generateBurrito by registering<JavaExec>() {
-        mainClass.set("com.mineinabyss.protocolburrito.generation.MainKt")
-        classpath(files(configurations.runtimeClasspath, jar))
-    }
     reobfJar {
         onlyIf { false }
-    }
-    build {
-        dependsOn(generateBurrito)
     }
 }

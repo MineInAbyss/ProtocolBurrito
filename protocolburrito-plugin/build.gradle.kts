@@ -11,9 +11,3 @@ dependencies {
     implementation(project(":"))
     implementation(libs.bundles.idofront.core)
 }
-
-tasks {
-    assemble {
-        dependsOn(project(":protocolburrito-generator").tasks.assemble)
-    }
-}

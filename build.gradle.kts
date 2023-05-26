@@ -1,3 +1,5 @@
+import io.papermc.paperweight.util.registering
+
 plugins {
     id("com.mineinabyss.conventions.kotlin.jvm")
     id("com.mineinabyss.conventions.nms")
@@ -37,11 +39,25 @@ dependencies {
     api(project(":protocolburrito-api"))
 }
 
-sourceSets["main"].java.srcDir(file("$rootDir/protocolburrito-generator/build/generated/burrito/main"))
+sourceSets["main"].java.srcDir(file("$buildDir/generated/burrito/main"))
 
 tasks {
     assemble {
         dependsOn(reobfJar)
+    }
+    build {
         dependsOn(project(":protocolburrito-plugin").tasks.build)
+    }
+
+    val generateBurrito by registering<JavaExec> {
+        mainClass.set("com.mineinabyss.protocolburrito.generation.MainKt")
+        classpath = project("protocolburrito-generator").sourceSets["main"].runtimeClasspath
+        outputs.dir("$buildDir/generated/burrito/main")
+    }
+    sourcesJar {
+        dependsOn(generateBurrito)
+    }
+    compileKotlin {
+        dependsOn(generateBurrito)
     }
 }
