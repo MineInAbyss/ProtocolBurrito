@@ -28,14 +28,28 @@ This project can be shaded into your plugin, however it's designed to be used as
 
 ### Gradle
 
-```groovy
+```gradle
 repositories {
-    maven  { url 'https://repo.mineinabyss.com/releases' }
+    maven  { url 'https://repo.mineinabyss.com/#/releases' }
 }
 
 dependencies {
-    compileOnly 'com.mineinabyss:protocolburrito:<version>'
+    compileOnly 'com.mineinabyss:protocolburrito-api:<version>'
 }
+```
+### Maven
+
+```xml
+<repository>
+    <id>mineinabyss-releases</id>
+    <url>https://repo.mineinabyss.com/#/releases</url>
+</repository>
+
+<dependency>
+    <groupId>com.mineinabyss</groupId>
+    <artifactId>protocolburrito-api</artifactId>
+    <version>version</version>
+</dependency>
 ```
 
 ### Example
