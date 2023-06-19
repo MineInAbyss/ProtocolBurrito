@@ -1,7 +1,9 @@
 <div align="center">
 
+![logo](https://raw.githubusercontent.com/justADeni/ProtocolBurrito/master/img/logo.png)    
+    
 # ProtocolBurrito
-
+    
 [![Package](https://img.shields.io/maven-metadata/v?metadataUrl=https://repo.mineinabyss.com/releases/com/mineinabyss/protocolburrito/maven-metadata.xml)](https://repo.mineinabyss.com/#/releases/com/mineinabyss/protocolburrito)
 [![Contribute](https://shields.io/badge/Contribute-e57be5?logo=github%20sponsors&style=flat&logoColor=white)](https://github.com/MineInAbyss/MineInAbyss/wiki/Setup-and-Contribution-Guide)
 </div>
