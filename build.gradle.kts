@@ -1,12 +1,10 @@
-val serverVersion: String by project
+import io.papermc.paperweight.util.registering
 
 plugins {
-    kotlin("jvm")
-    id("com.mineinabyss.conventions.kotlin")
+    id("com.mineinabyss.conventions.kotlin.jvm")
     id("com.mineinabyss.conventions.nms")
     id("com.mineinabyss.conventions.publication")
     id("com.mineinabyss.conventions.autoversion")
-    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 repositories {
@@ -26,9 +24,11 @@ allprojects {
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     }
 
+    val libs = rootProject.libs
+
     dependencies {
         compileOnly(kotlin("stdlib-jdk8"))
-        compileOnly("com.comphenix.protocol:ProtocolLib:5.0.0-SNAPSHOT") {
+        compileOnly(libs.minecraft.plugin.protocollib) {
             // this dep wasn't being resolved.
             exclude(group = "com.comphenix.executors")
         }
@@ -36,23 +36,28 @@ allprojects {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:$serverVersion")
     api(project(":protocolburrito-api"))
 }
 
-sourceSets["main"].java.srcDir(file("$rootDir/protocolburrito-generator/build/generated/burrito/main"))
+sourceSets["main"].java.srcDir(file("$buildDir/generated/burrito/main"))
 
 tasks {
     assemble {
         dependsOn(reobfJar)
+    }
+    build {
         dependsOn(project(":protocolburrito-plugin").tasks.build)
     }
 
-    shadowJar {
-        archiveClassifier.set("")
+    val generateBurrito by registering<JavaExec> {
+        mainClass.set("com.mineinabyss.protocolburrito.generation.MainKt")
+        classpath = project("protocolburrito-generator").sourceSets["main"].runtimeClasspath
+        outputs.dir("$buildDir/generated/burrito/main")
     }
-//
-//    sourcesJar {
-//        from(sourceSets.main.get().allSource)
-//    }
+    sourcesJar {
+        dependsOn(generateBurrito)
+    }
+    compileKotlin {
+        dependsOn(generateBurrito)
+    }
 }
