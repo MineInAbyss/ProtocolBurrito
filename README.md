@@ -63,7 +63,7 @@ protocolManager.addPacketListener(object : PacketAdapter(
 
 ```kotlin
 protocolManager(pluginRef) {
-    onSend<ClientboundAddMobPacketWrap> { wrap ->
+    onSend<ClientboundAddEntityPacketWrap> { wrap ->
         if (entity(wrap.id).isCustomMob)
             wrap.type = Registry.ENTITY_TYPE.getId(NMSEntityType.ZOMBIE)
     }
