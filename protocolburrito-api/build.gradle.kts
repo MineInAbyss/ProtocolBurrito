@@ -1,7 +1,9 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.mineinabyss.conventions.kotlin.jvm")
-    id("com.mineinabyss.conventions.papermc")
-    id("com.mineinabyss.conventions.publication")
+    alias(libs.plugins.mia.kotlin.jvm)
+    id(libs.plugins.mia.papermc.get().pluginId)
+    alias(libs.plugins.mia.publication)
+    alias(libs.plugins.mia.autoversion)
 }
 
 dependencies {

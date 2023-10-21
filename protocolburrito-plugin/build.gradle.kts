@@ -1,10 +1,11 @@
 val idofrontVersion: String by project
 
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.mineinabyss.conventions.kotlin.jvm")
-    id("com.mineinabyss.conventions.papermc")
-    id("com.mineinabyss.conventions.nms")
-    id("com.mineinabyss.conventions.copyjar")
+    alias(libs.plugins.mia.kotlin.jvm)
+    id(libs.plugins.mia.papermc.get().pluginId)
+    alias(libs.plugins.mia.nms)
+    id(libs.plugins.mia.copyjar.get().pluginId)
 }
 
 dependencies {

@@ -1,8 +1,7 @@
-import io.papermc.paperweight.util.registering
-
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    kotlin("jvm")
-    id("com.mineinabyss.conventions.nms")
+    alias(libs.plugins.mia.kotlin.jvm)
+    alias(libs.plugins.mia.nms)
 }
 
 repositories {
