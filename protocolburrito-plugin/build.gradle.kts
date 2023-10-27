@@ -9,6 +9,6 @@ plugins {
 }
 
 dependencies {
+    compileOnly(libs.bundles.idofront.core)
     implementation(project(":"))
-    implementation(libs.bundles.idofront.core)
 }

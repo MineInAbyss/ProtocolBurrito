@@ -1,9 +1,14 @@
 name: ProtocolBurrito
-version: ${plugin_version}
+version: "${plugin_version}"
 author: Offz
 main: com.mineinabyss.protocolburrito.ProtocolBurritoPlugin
-api-version: '1.20'
-depend: [ProtocolLib]
+api-version: "1.20"
 
 prefix: ProtocolBurrito
 description: A packet wrapper for ProtocolLib
+
+dependencies:
+  server:
+    ProtocolLib:
+      required: true
+      load: BEFORE
