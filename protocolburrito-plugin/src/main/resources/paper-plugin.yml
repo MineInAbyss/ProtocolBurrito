@@ -9,6 +9,10 @@ description: A packet wrapper for ProtocolLib
 
 dependencies:
   server:
+    Idofront:
+      required: true
+      load: BEFORE
+      join-classpath: true
     ProtocolLib:
       required: true
       load: BEFORE
