@@ -25,7 +25,9 @@ dependencyResolutionManagement {
     }
 
     versionCatalogs {
-        create("libs").from("com.mineinabyss:catalog:$idofrontVersion")
+        create("libs"){
+            from("com.mineinabyss:catalog:$idofrontVersion")
+        }
         create("burritoLibs").from(files("gradle/burritoLibs.versions.toml"))
     }
 }
