@@ -1,14 +1,11 @@
-val idofrontVersion: String by project
-
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.mia.kotlin.jvm)
-    id(libs.plugins.mia.papermc.get().pluginId)
-    alias(libs.plugins.mia.nms)
-    id(libs.plugins.mia.copyjar.get().pluginId)
+    alias(idofrontLibs.plugins.mia.kotlin.jvm)
+    id(idofrontLibs.plugins.mia.papermc.get().pluginId)
+    alias(idofrontLibs.plugins.mia.nms)
+    id(idofrontLibs.plugins.mia.copyjar.get().pluginId)
 }
 
 dependencies {
-    compileOnly(libs.bundles.idofront.core)
+    compileOnly(idofrontLibs.bundles.idofront.core)
     implementation(project(":"))
 }

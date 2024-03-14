@@ -2,10 +2,10 @@ import io.papermc.paperweight.util.registering
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.mia.kotlin.jvm)
-    alias(libs.plugins.mia.nms)
-    alias(libs.plugins.mia.publication)
-    alias(libs.plugins.mia.autoversion)
+    alias(idofrontLibs.plugins.mia.kotlin.jvm)
+    alias(idofrontLibs.plugins.mia.nms)
+    alias(idofrontLibs.plugins.mia.publication)
+    alias(idofrontLibs.plugins.mia.autoversion)
 }
 
 repositories {
@@ -25,19 +25,17 @@ allprojects {
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     }
 
-    val libs = rootProject.libs
+    val libs = rootProject.idofrontLibs
 
     dependencies {
         compileOnly(kotlin("stdlib-jdk8"))
-        compileOnly(libs.minecraft.plugin.protocollib) {
-            // this dep wasn't being resolved.
-            exclude(group = "com.comphenix.executors")
-        }
+        compileOnly(libs.minecraft.plugin.protocollib)
     }
 }
 
 dependencies {
     api(project(":protocolburrito-api"))
+    api(idofrontLibs.minecraft.plugin.protocollib)
 }
 
 sourceSets["main"].java.srcDir(file("$buildDir/generated/burrito/main"))

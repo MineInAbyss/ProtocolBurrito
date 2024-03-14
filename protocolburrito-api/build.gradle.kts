@@ -1,11 +1,11 @@
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.mia.kotlin.jvm)
-    id(libs.plugins.mia.papermc.get().pluginId)
-    alias(libs.plugins.mia.publication)
-    alias(libs.plugins.mia.autoversion)
+    alias(idofrontLibs.plugins.mia.kotlin.jvm)
+    id(idofrontLibs.plugins.mia.papermc.get().pluginId)
+    alias(idofrontLibs.plugins.mia.publication)
+    alias(idofrontLibs.plugins.mia.autoversion)
 }
 
 dependencies {
-    compileOnly(libs.kotlin.reflect)
+    compileOnly(idofrontLibs.kotlin.reflect)
 }

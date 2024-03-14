@@ -9,6 +9,7 @@ pluginManagement {
         google()
         maven("https://repo.mineinabyss.com/releases")
         maven("https://repo.papermc.io/repository/maven-public/")
+        mavenLocal()
     }
 
     resolutionStrategy.eachPlugin {
@@ -22,10 +23,11 @@ dependencyResolutionManagement {
 
     repositories {
         maven("https://repo.mineinabyss.com/releases")
+        mavenLocal()
     }
 
     versionCatalogs {
-        create("libs"){
+        create("idofrontLibs"){
             from("com.mineinabyss:catalog:$idofrontVersion")
         }
         create("burritoLibs").from(files("gradle/burritoLibs.versions.toml"))
