@@ -1,6 +1,7 @@
 package com.mineinabyss.protocolburrito.generation
 
 import com.comphenix.protocol.PacketType
+import com.comphenix.protocol.events.PacketContainer
 import com.comphenix.protocol.injector.packet.PacketRegistry
 import com.mineinabyss.protocolburrito.FieldHelpers
 import com.mineinabyss.protocolburrito.WrappedCompanion
@@ -11,36 +12,59 @@ import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
 import java.io.File
 import java.util.concurrent.atomic.AtomicInteger
-import kotlin.reflect.KType
+import kotlin.reflect.KClass
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.jvmErasure
 
 val OUTPUT_DIR = File("build/generated/burrito/main/")
 
+@OptIn(ExperimentalStdlibApi::class)
 fun generateProtocolExtensions() {
     val reflections = Reflections("net.minecraft.network.protocol.game", SubTypesScanner(false))
     reflections.getSubTypesOf(Packet::class.java)
         .map { it.kotlin }
         .filter { !it.isAbstract }
         .forEach { packetClass ->
-            val indices = mutableMapOf<KType, AtomicInteger>()
+            val indices = mutableMapOf<KClass<*>, AtomicInteger>()
             val props = packetClass.declaredMemberProperties.mapNotNull { field ->
+
                 val type = field.returnType
                 if (field.visibility == KVisibility.PUBLIC) return@mapNotNull null
-                if (field.returnType.jvmErasure.visibility != KVisibility.PUBLIC) return@mapNotNull null
-                if (field.returnType.arguments.any { it.type?.jvmErasure?.visibility != KVisibility.PUBLIC }) return@mapNotNull null
-                val index = indices.getOrPut(type) { AtomicInteger(0) }
-                PropertySpec.builder(field.name, type.asTypeName().copy(annotations = listOf())) //.let {
+                val typeInfo = TypeMap.getStructureModifier(type) ?: run {
+                    println("Creating ${packetClass.simpleName}")
+                    println("Failed to find structure modifier on (name=${field.name}, type=$type, erased=${type.jvmErasure})")
+                    if (field.returnType.jvmErasure.visibility != KVisibility.PUBLIC) return@mapNotNull null
+                    if (field.returnType.arguments.any { it.type?.jvmErasure?.visibility != KVisibility.PUBLIC }) return@mapNotNull null
+                    null
+                }
+                val useType = typeInfo?.type ?: type.asTypeName()
+                val index = indices.getOrPut(type.jvmErasure) { AtomicInteger(0) }
+                PropertySpec.builder(field.name, useType.copy(annotations = listOf()))
                     .getter(
-                        FunSpec.getterBuilder()
-                            .addStatement("return %T.getField(handle, ${index.toInt()})", FieldHelpers::class)
+                        FunSpec.getterBuilder().run {
+                            if (typeInfo != null)
+                                addStatement(
+                                    "return container.%N().read(${index.toInt()})",
+                                    typeInfo.structureModifierMember
+                                )
+                            else
+                                addStatement("return %T.getField(handle, ${index.toInt()})", FieldHelpers::class)
+                        }
                             .build()
                     )
                     .setter(
                         FunSpec.setterBuilder()
                             .addParameter(ParameterSpec.builder("value", type.asTypeName()).build())
-                            .addCode("%T.setField(handle, ${index.toInt()}, value)", FieldHelpers::class)
+                            .run {
+                                if (typeInfo != null)
+                                    addCode(
+                                        "container.%N().write(${index.toInt()}, value)",
+                                        typeInfo.structureModifierMember
+                                    )
+                                else
+                                    addCode("%T.setField(handle, ${index.toInt()}, value)", FieldHelpers::class)
+                            }
                             .build()
                     )
                     .mutable(true)
@@ -62,13 +86,18 @@ fun generateProtocolExtensions() {
                             PropertySpec.builder("handle", Any::class/*packetClass*/).build()
                         )
 //                    .addProperty("handle", packetClass)
+                        .addProperty(
+                            PropertySpec.builder("container", PacketContainer::class, KModifier.OVERRIDE)
+                                .initializer("PacketContainer(packetType, handle)")
+                                .build()
+                        )
                         .addProperties(props)
                         .addType(
                             TypeSpec
                                 .companionObjectBuilder()
                                 .addSuperinterface(WrappedCompanion::class)
                                 .addProperty(
-                                    PropertySpec.builder("type", PacketType::class)
+                                    PropertySpec.builder("packetType", PacketType::class)
                                         .addModifiers(KModifier.OVERRIDE)
                                         .getter(
                                             FunSpec.getterBuilder()

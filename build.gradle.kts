@@ -22,7 +22,7 @@ allprojects {
     repositories {
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         maven("https://repo.dmulloy2.net/nexus/repository/public/")//ProtocolLib
-        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+        maven("https://repo.papermc.io/repository/maven-public/")
     }
 
     val libs = rootProject.idofrontLibs

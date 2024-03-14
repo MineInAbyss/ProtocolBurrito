@@ -1,5 +1,7 @@
 package com.mineinabyss.protocolburrito
 
+import com.comphenix.protocol.events.PacketContainer
+
 object FieldHelpers {
     inline fun <reified T : Any> getField(forObject: Any, index: Int): T =
         getField(T::class.java, forObject, index)

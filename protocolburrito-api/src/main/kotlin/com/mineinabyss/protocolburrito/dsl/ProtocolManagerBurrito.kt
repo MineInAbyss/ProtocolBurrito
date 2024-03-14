@@ -28,7 +28,7 @@ class ProtocolManagerBurrito(
         crossinline onSend: PacketEvent.(wrapped: T) -> Unit
     ) {
         val companion = T::class.companionObjectInstance as WrappedCompanion
-        onSend(companion.type, priority = priority) { onSend(companion.wrap(packet.handle) as T) }
+        onSend(companion.packetType, priority = priority) { onSend(companion.wrap(packet.handle) as T) }
     }
 
     inline fun onSend(
@@ -48,7 +48,7 @@ class ProtocolManagerBurrito(
         crossinline onReceive: PacketEvent.(wrapped: T) -> Unit
     ) {
         val companion = T::class.companionObjectInstance as WrappedCompanion
-        onReceive(companion.type, priority = priority) { onReceive(companion.wrap(packet.handle) as T) }
+        onReceive(companion.packetType, priority = priority) { onReceive(companion.wrap(packet.handle) as T) }
     }
 
     inline fun onReceive(

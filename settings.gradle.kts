@@ -35,6 +35,7 @@ dependencyResolutionManagement {
 }
 
 include(
+    "protocolburrito-generator-obfuscated",
     "protocolburrito-generator",
     "protocolburrito-api",
     "protocolburrito-plugin"

@@ -1,3 +1,7 @@
 package com.mineinabyss.protocolburrito
 
-interface WrappedPacket
+import com.comphenix.protocol.events.PacketContainer
+
+interface WrappedPacket {
+    val container: PacketContainer
+}

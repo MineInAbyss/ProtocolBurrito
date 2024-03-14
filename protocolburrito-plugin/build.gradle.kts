@@ -9,3 +9,11 @@ dependencies {
     compileOnly(idofrontLibs.bundles.idofront.core)
     implementation(project(":"))
 }
+
+
+configurations {
+    runtimeClasspath {
+        val protocolLib = idofrontLibs.minecraft.plugin.protocollib.get()
+        exclude(protocolLib.group, protocolLib.name)
+    }
+}
