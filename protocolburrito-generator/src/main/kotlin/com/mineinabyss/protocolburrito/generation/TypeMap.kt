@@ -128,7 +128,7 @@ object TypeMap {
         // ...
         typeOf<net.minecraft.world.InteractionHand>() to PacketContainer::getHands,
         typeOf<net.minecraft.core.Direction>() to PacketContainer::getDirections,
-        typeOf<net.minecraft.network.chat.ChatType.BoundNetwork>() to PacketContainer::getChatTypes,
+        typeOf<net.minecraft.network.chat.ChatType.Bound>() to PacketContainer::getChatTypes,
         typeOf<net.minecraft.resources.ResourceLocation>() to PacketContainer::getMinecraftKeys,
         // getDimensions
         typeOf<net.minecraft.world.level.dimension.DimensionType>() to PacketContainer::getDimensionTypes,
