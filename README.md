@@ -6,6 +6,10 @@
 [![Contribute](https://shields.io/badge/Contribute-e57be5?logo=github%20sponsors&style=flat&logoColor=white)](https://github.com/MineInAbyss/MineInAbyss/wiki/Setup-and-Contribution-Guide)
 </div>
 
+
+> [!IMPORTANT]  
+> We have archived ProtocolBurrito in favor of writing helpers for working directly with NMS packets in [Idofront](https://github.com/MineInAbyss/Idofront/). It's much easier to work with deobfuscated NMS classes these days and we wish to avoid depending on reflection and dependencies that take a while to update.
+
 A packet wrapper for ProtocolLib generated from Minecraft's obfuscation mappings, thanks to PaperMC's [userdev](https://github.com/PaperMC/paperweight/tree/main/paperweight-userdev) project. Comes with clean Kotlin syntax and Java support.
 
 This project is currently **HIGHLY WIP**! Don't use it if you are a fan of stable codebases.
